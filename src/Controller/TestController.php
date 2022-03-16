@@ -48,7 +48,9 @@ class TestController extends AbstractController
             'id' => $id,
             'route_name' => $request->attributes->get('_route'),
             'params' => $request->attributes->get('_route_params'),
-            'url' => $this->generateUrl('app_test_item', ['id' => 34, 'filter_name' => 'trust me', 'order' => 'ASC']),
+            'params_all' => $request->attributes->all(),
+            'query_all' => $request->query->all(),
+            'url' => $request->server->get('REQUEST_SCHEME') . '://' . $request->server->get('HTTP_HOST') . $this->generateUrl('app_test_item', ['id' => 34, 'filter_name' => 'trust me', 'order' => 'ASC']),
         ]);
     }
 }
