@@ -7,10 +7,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/test", name="app_test_")
+ */
 class TestController extends AbstractController
 {
     /**
-     * @Route("/test", name="app_test")
+     * @Route("/", name="index")
      */
     public function index(): Response
     {
@@ -20,7 +23,7 @@ class TestController extends AbstractController
     }
 
     /**
-     * @Route("/test/new", name="app_test_new", )
+     * @Route("/new", name="new")
      */
     public function new(): Response
     {
@@ -31,7 +34,11 @@ class TestController extends AbstractController
     }
 
     /**
-     * @Route("/test/{id}", name="app_test_item", requirements={"id"="\d+"})
+     * @Route("/{id}",
+     *     name="item",
+     *     requirements={"id"="\d+"},
+     *     methods={"GET","HEAD"},
+     *     defaults={"id"="1"})
      */
     public function item(int $id, Request $request): Response
     {
