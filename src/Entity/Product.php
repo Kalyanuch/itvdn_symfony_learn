@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\Types\Integer;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 class Product
@@ -19,14 +20,10 @@ class Product
     #[ORM\Column(type: 'text')]
     private $description;
 
-    /**
-     * @ORM\Column(type="float")
-     */
+    #[ORM\Column(type: 'float')]
     private $price;
 
-    /**
-     * @ORM\Column(type=bool)
-     */
+    #[ORM\Column(type: 'boolean')]
     private $status;
 
     public function getId(): ?int
