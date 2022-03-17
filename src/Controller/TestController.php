@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Service\UrlBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -40,7 +41,7 @@ class TestController extends AbstractController
      *     methods={"GET","HEAD"},
      *     defaults={"id"="1"})
      */
-    public function item(int $id, Request $request): Response
+    public function item(int $id, Request $request, UrlBuilder $urlBuilder): Response
     {
         return $this->render('test/item.html.twig', [
             'controller_name' => 'TestController',
@@ -50,7 +51,8 @@ class TestController extends AbstractController
             'params' => $request->attributes->get('_route_params'),
             'params_all' => $request->attributes->all(),
             'query_all' => $request->query->all(),
-            'url' => $request->server->get('REQUEST_SCHEME') . '://' . $request->server->get('HTTP_HOST') . $this->generateUrl('app_test_item', ['id' => 34, 'filter_name' => 'trust me', 'order' => 'ASC']),
+            //'url' => $request->server->get('REQUEST_SCHEME') . '://' . $request->server->get('HTTP_HOST') . $this->generateUrl('app_test_item', ['id' => 34, 'filter_name' => 'trust me', 'order' => 'ASC']),
+            'url' => $urlBuilder->getFullUrl($this->generateUrl('app_test_item', ['id' => 34, 'filter_name' => 'trust me', 'order' => 'ASC'])),
         ]);
     }
 }

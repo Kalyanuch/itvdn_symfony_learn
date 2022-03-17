@@ -17,7 +17,8 @@ class UrlBuilder
     public function getFullUrl(string $url): string
     {
         if(!empty($url))
-            return $this->request->server->get('REQUEST_SCHEME') . '://' . $this->request->server->get('HTTP_HOST') . $url;
+            return $this->request->server->get('REQUEST_SCHEME')
+                . '://' . $this->request->server->get('HTTP_HOST') . $url;
 
         return '';
     }
