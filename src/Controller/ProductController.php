@@ -69,6 +69,8 @@ class ProductController extends AbstractController
             ]);
         } else
         {
+            //throw $this->createNotFoundException('Product not found');
+
             return $this->render('product/not_found.html.twig', [
                 'controller_name' => 'ProductController',
                 'function_name' => 'item',
