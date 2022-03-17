@@ -24,6 +24,11 @@ class Product
      */
     private $price;
 
+    /**
+     * @ORM\Column(type=bool)
+     */
+    private $status;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -61,6 +66,18 @@ class Product
     public function setPrice(float $price): self
     {
         $this->price = $price;
+
+        return $this;
+    }
+
+    public function getStatus(): ?bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(bool $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }
