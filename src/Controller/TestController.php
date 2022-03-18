@@ -18,6 +18,8 @@ class TestController extends AbstractController
      */
     public function index(): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Not enough privileges to access this page!');
+
         return $this->render('test/index.html.twig', [
             'controller_name' => 'TestController',
         ]);
