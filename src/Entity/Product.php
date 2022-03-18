@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use phpDocumentor\Reflection\Types\Integer;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
+#[ORM\HasLifecycleCallbacks()]
 class Product
 {
     #[ORM\Id]
@@ -25,6 +26,12 @@ class Product
 
     #[ORM\Column(type: 'boolean')]
     private $status;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private $createdAt;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private $updatedAt;
 
     public function getId(): ?int
     {
@@ -77,5 +84,41 @@ class Product
         $this->status = $status;
 
         return $this;
+    }
+
+    public function getCreatedAt(): \DateTime
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTime $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): \DateTime
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTime $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    #[ORM\PrePersist]
+    public function setDefaultCreatedAt(): void
+    {
+        $this->createdAt = new \DateTime();
+    }
+
+    #[ORM\PreUpdate]
+    public function setDefaultUpdatedAt(): void
+    {
+        $this->updatedAt = new \DateTime();
     }
 }
