@@ -68,7 +68,7 @@ class ProductController extends AbstractController
     {
         $product = $this->productRepository->find($id);
 
-        if($product)
+        if($product && $product->getStatus())
         {
             return $this->render('product/item.html.twig', [
                 'controller_name' => 'ProductController',
