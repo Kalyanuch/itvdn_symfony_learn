@@ -8,6 +8,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ProductController extends AbstractController
 {
@@ -38,22 +39,28 @@ class ProductController extends AbstractController
     }
 
     #[Route('/product/add', name: 'app_product_add')]
-    public function add(ManagerRegistry $doctrine): Response
+    public function add(ValidatorInterface $validator): Response
     {
         $number = (int)rand(1, 100);
 
         $product = new Product();
-        $product->setName('Test Product ' . $number);
+        //$product->setName('Test Product ' . $number);
         $product->setDescription('Product description for product ' . $number);
         $product->setPrice(rand(1, 2000));
         $product->setStatus(1);
 
-        $this->em->persist($product);
-        $this->em->flush();
+        $errors = $validator->validate($product);
+
+        if(empty($errors))
+        {
+            $this->em->persist($product);
+            $this->em->flush();
+        }
 
         return $this->render('product/add.html.twig', [
             'controller_name' => 'ProductController',
-            'function_name' => 'add'
+            'function_name' => 'add',
+            'errors' => $errors
         ]);
     }
 

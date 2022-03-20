@@ -17,4 +17,11 @@
             <li>Your template at <code><a href="{{ '/home/kolya/projects/itvdn_symfony.home/www/templates/product/index.html.twig'|file_link(0) }}">templates/product/index.html.twig</a></code></li>
         </ul>
     </div>
+
+    {% if errors %}
+    <p>Errors:</p>
+    {% for error in errors %}
+    <p>{{ dump(error) }}</p>
+    {% endfor %}
+    {% endif %}
 {% endblock %}
