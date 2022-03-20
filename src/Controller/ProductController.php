@@ -8,7 +8,10 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\Email;
 
 class ProductController extends AbstractController
 {
@@ -106,17 +109,30 @@ class ProductController extends AbstractController
 
         if($product)
         {
-            $number = (int)rand(1, 100);
+            $validator = Validation::createValidator();
+            $constraint = new Assert\Email();
 
-            $product->setName('Updated product ' . $number);
-            $product->setDescription('Updated description for product ' . $number);
-            $product->setPrice(rand(1, 2000));
-            $product->setStatus(!$product->getStatus());
+            $input = 'example';
 
-            //$this->em->persist($product);
-            $this->em->flush();
+            $errors = $validator->validate($input, $constraint);
 
-            return $this->redirectToRoute('app_product_item', ['id' => $id]);
+            if($errors)
+            {
+                return new Response($errors);
+            } else
+            {
+                $number = (int)rand(1, 100);
+
+                $product->setName('Updated product ' . $number);
+                $product->setDescription('Updated description for product ' . $number);
+                $product->setPrice(rand(1, 2000));
+                $product->setStatus(!$product->getStatus());
+
+                //$this->em->persist($product);
+                $this->em->flush();
+
+                return $this->redirectToRoute('app_product_item', ['id' => $id]);
+            }
         } else
         {
             //throw $this->createNotFoundException('Product not found');
