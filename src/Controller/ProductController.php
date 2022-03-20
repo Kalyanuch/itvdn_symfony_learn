@@ -34,6 +34,32 @@ class ProductController extends AbstractController
     #[Route('/product', name: 'app_product')]
     public function index(): Response
     {
+        $arData = [
+            'name' => 'Test',
+            'lastname' => 'Soname',
+            'email' => 'none@none.no',
+            'age' => 30,
+            'tags' => [
+                'music',
+                'electronic',
+                'art'
+            ]
+        ];
+
+        $validator = Validation::createValidator();
+
+        $constraint = new Assert\Collection([
+            'name' => new Assert\Length(['min' => 3]),
+            'lastname' => new Assert\Length(['min' => 4]),
+            'email' => new Assert\Email(),
+            'age' => new Assert\Positive(),
+            'tags' => new Assert\NotBlank(),
+        ]);
+
+        $errors = $validator->validate($arData, $constraint);
+
+        dd($errors);
+
         return $this->render('product/index.html.twig', [
             'controller_name' => 'ProductController',
             //'products' => $this->productRepository->findAll(),
