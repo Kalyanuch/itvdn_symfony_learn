@@ -6,12 +6,14 @@ use App\Entity\Product;
 use App\Service\UrlBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Constraints\Email;
 
 class ProductController extends AbstractController
 {
@@ -86,10 +88,17 @@ class ProductController extends AbstractController
             $this->em->flush();
         }
 
+        $form = $this->createFormBuilder()
+            ->add('title', TextType::class)
+            ->add('description', TextareaType::class)
+            ->add('submit', SubmitType::class, ['label' => 'Save new product'])
+            ->getForm();
+
         return $this->render('product/add.html.twig', [
             'controller_name' => 'ProductController',
             'function_name' => 'add',
-            'errors' => $errors
+            'errors' => $errors,
+            'form' => $form->createView(),
         ]);
     }
 
