@@ -20,4 +20,16 @@
         <h3>Current product info:</h3>
         {{ dump(product) }}
     </div>
+
+    <h3>Product json example:</h3>
+    <p>{{ jsonProduct }}</p>
+
+    <h3>Product xml example:</h3>
+    <p>{{ xmlProduct }}</p>
+
+    <h3>Deserialize product json example:</h3>
+    {{ dump(jsonDeserialize) }}
+
+    <h3>Deserialize product xml example:</h3>
+    {{ dump(xmlDeserialize) }}
 {% endblock %}

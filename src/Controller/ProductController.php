@@ -11,9 +11,17 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
 
 class ProductController extends AbstractController
 {
@@ -36,6 +44,7 @@ class ProductController extends AbstractController
     #[Route('/product', name: 'app_product')]
     public function index(): Response
     {
+/*
         $arData = [
             'name' => 'Test',
             'lastname' => 'Soname',
@@ -61,7 +70,7 @@ class ProductController extends AbstractController
         $errors = $validator->validate($arData, $constraint);
 
         dd($errors);
-
+*/
         return $this->render('product/index.html.twig', [
             'controller_name' => 'ProductController',
             //'products' => $this->productRepository->findAll(),
@@ -115,10 +124,33 @@ class ProductController extends AbstractController
 
         if($product && $product->getStatus())
         {
+            $encoders = [new JsonEncoder(), new XmlEncoder()];
+            //$normalizers = [new ObjectNormalizer()];
+            $normalizers = [new DateTimeNormalizer([
+                //DateTimeNormalizer::FORMAT_KEY => "d/m/Y",
+                ]),
+                new ObjectNormalizer(
+                    null,
+                    null,
+                    null,
+                    new ReflectionExtractor()
+                ),
+                new GetSetMethodNormalizer(),
+                new ArrayDenormalizer(),
+            ];
+            $serializator = new Serializer($normalizers, $encoders);
+
+            $jsonProduct = $serializator->serialize($product, 'json');
+            $xmlProduct = $serializator->serialize($product, 'xml');
+
             return $this->render('product/item.html.twig', [
                 'controller_name' => 'ProductController',
                 'function_name' => 'item',
                 'product' => $product,
+                'jsonProduct' => $jsonProduct,
+                'xmlProduct' => $xmlProduct,
+                'jsonDeserialize' => $serializator->deserialize($jsonProduct, Product::class, 'json'),
+                'xmlDeserialize' => $serializator->deserialize($xmlProduct, Product::class, 'xml'),
             ]);
         } else
         {
