@@ -9,10 +9,12 @@ class ExceptionListener
 {
     public function onKernelException(ExceptionEvent $event)
     {
+/*
         $exception = $event->getThrowable();
 
         $message = 'Error: ' . $exception->getCode() . ' ' . $exception->getMessage();
 
         $event->setResponse((new Response())->setContent($message));
+*/
     }
 }
