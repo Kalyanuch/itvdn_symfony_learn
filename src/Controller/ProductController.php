@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Encoder\CsvEncoder;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
@@ -143,6 +144,17 @@ class ProductController extends AbstractController
             $jsonProduct = $serializator->serialize($product, 'json');
             $xmlProduct = $serializator->serialize($product, 'xml');
 
+            $csvEncoder = new CsvEncoder();
+
+            $arDataExample = [
+                'apple', 'samsung', 'dell'
+            ];
+
+            $context = [
+                'csv_delimiter' => ';',
+                'csv_escape_char' => '"'
+            ];
+
             return $this->render('product/item.html.twig', [
                 'controller_name' => 'ProductController',
                 'function_name' => 'item',
@@ -151,6 +163,7 @@ class ProductController extends AbstractController
                 'xmlProduct' => $xmlProduct,
                 'jsonDeserialize' => $serializator->deserialize($jsonProduct, Product::class, 'json'),
                 'xmlDeserialize' => $serializator->deserialize($xmlProduct, Product::class, 'xml'),
+                'csvArrayEncode' => $csvEncoder->encode($arDataExample, 'csv', $context),
             ]);
         } else
         {
